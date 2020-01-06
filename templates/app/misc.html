@@ -1,0 +1,15 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %}
+    Miscellaneous
+{% endblock %}
+
+{% block content %}
+
+    {% bootstrap_button 'button' size='lg' %}
+    <hr>
+    {% bootstrap_alert "Something went wrong" alert_type='danger' %}
+
+{% endblock %}

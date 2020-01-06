@@ -1,0 +1,22 @@
+{% extends 'app/bootstrap.html' %}
+
+{% load bootstrap4 %}
+
+{% block bootstrap4_content %}
+    <div class="container">
+        <h1>{% block title %}(no title){% endblock %}</h1>
+
+        <p>
+            <a href="{% url 'metal' %}"><b>METAL</b></a>
+            <a href="{% url 'home' %}">home</a>
+            <a href="{% url 'formset_default' %}">formset</a>
+            <a href="{% url 'form_default' %}">form</a>
+            <a href="{% url 'form_horizontal' %}">form_horizontal</a>
+        </p>
+
+        {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+
+        {% block content %}(no content){% endblock %}
+    </div>
+
+{% endblock %}
