@@ -9,8 +9,9 @@ class Intro extends React.Component {
 
         <p>After reading <a target="_blank" rel="noopener noreferrer" href="https://www.amazon.com/Advances-Financial-Machine-Learning-Marcos/dp/1119482089">Advances in Financial Machine Learning</a> by Marcos Lopez de Prado I was incredibly motivated to further explore machine learning applications in  finance. I built <code>fincl</code> (the web app you're looking at right now) to encapsulate some of those learnings and buildings. The complete source code lives also on <a target="_blank" rel="noopener noreferrer" href="https://github.com/dodafin/fincl">GitHub</a>.</p>
 
-        <p>Automating the entire pipeline like I've done here is likely not the way an actual trading strategy would be implemented (unless attempting to build an automated ML platform like <a target="_blank" rel="noopener noreferrer" href="https://www.h2o.ai/products/h2o-driverless-ai/">H2O Driverless AI</a>) but I chose the mantra of "build to learn" for the techniques described in and learn I did while combining the various disparate techniques described in the book.</p>
-        <p>I've also included a historical backtest and tearsheet for people not familiar with ML classification reports (despite the many problems with such an evaluation method).</p>
+        <p>The cool thing about <code>fincl</code> is that it basically functions as one complete "automated financial ML pipeline". It doesn't need much more than the inputs in the header (choosing a classifier and forecast horizon) to sample bars, compute features & feature importances, select a subset of them, binarize the price series, and then hyper-parameter optimize, train, and detailed reports evaluating the out-of-sample predictions.</p>
+
+        <p>In addition to the standard ML classification report are also included a historical backtest and tearsheet for people not familiar with machine learning.</p>
         <p>The frontend and backend are fully capable of both <strong>classical labeling</strong> (a ML classifier generates a trading signal) and <strong>meta-labeling</strong> (a ML classifier filters a trading signal) and while both methods managed to produce similar prediction scores, inconsistent results in the walk-forward PnL simulation of meta-labeling combined with a self-imposed deadline have made me include only the classical labeling results herein for the time being.</p>
 
        <h3>Findings</h3>
@@ -21,7 +22,7 @@ class Intro extends React.Component {
         <li>Tree-based models (RF, XGBoost, LGBM) all outperform kNN, our Dummy classifier and the "Long All" baseline.</li>
         <li>Models tend to have higher prediction scores on shorter forecast horizons, however likely do not outperform due to higher slippage & trading costs.</li>
         <li>The training data starts in 2007, which might be a reason for the models exhibiting a short bias (going short roughly 50%-100% more than going long).</li>
-        <li>The models perform surprisingly well despite being evaluated exclusively in a bull market (2014-2020).</li>
+        <li>The models perform surprisingly well despite beginning training during GFC and being evaluated exclusively in a bull market (2014-2020).</li>
 
        </ul>
         <h3>Methods</h3>
