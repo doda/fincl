@@ -19,7 +19,7 @@ class Intro extends React.Component {
         <li>Volume Ratio, Fractionally Differentiated Prices, Variance are the most important features over short forecast horizons (10 & 25 bars). (Further info under the "Feature Importance" tab)</li>
         <li>Volume Ratio is the most important feature for almost all forecast horizons and lookback windows, except for 100 bar forecast horizons where most features except serial correlation perform well.</li>
         <li>Rather than having learned exploitable patterns in the market data that is exploitable cross-asset, the ML models seem to have learned to differentiate between assets and go consistently long / short certain assets.</li>
-        <li>Tree-based models (RF, XGBoost, LGBM) all outperform kNN, our Dummy classifier and the "Long All" baseline.</li>
+        <li>Tree-based models (RF, XGBoost, LGBM) all our Dummy classifier and the "Long All" baseline.</li>
         <li>Models tend to have higher prediction scores on shorter forecast horizons, however likely do not outperform due to higher slippage & trading costs.</li>
         <li>The training data starts in 2007, which might be a reason for the models exhibiting a short bias (going short roughly 50%-100% more than going long).</li>
         <li>The models perform surprisingly well despite beginning training during GFC and being evaluated exclusively in a bull market (2014-2020).</li>

@@ -52,9 +52,6 @@ module.exports = {
           "text" : "LightGBM",
           "value" : "lgbm",
         }, {
-          "text" : "KNN",
-          "value" : "knn",
-        }, {
           "text" : "Dummy (random) classifier",
           "value" : "dummy",
         }]
