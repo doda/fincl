@@ -64,8 +64,11 @@ def create_frontend_payload(file_name, force=False):
     # Delete stuff we don't want in the frontend payload
     del pay_j["events"]
     del pay_j["symbols"]
+
+    logging.info(f"Writing f_payload at {new_file_name}")
     with open(new_file_name, "w") as f:
         json.dump(pay_j, f, ignore_nan=True, default=datetime.datetime.isoformat)
+    return new_file_name
 
 
 def calc_returns(df):
