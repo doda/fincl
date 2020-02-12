@@ -98,6 +98,7 @@ def create_tearsheet(close, signal, file_name, report_type, benchmark_rets=None)
         benchmark_rets.name = "Benchmark (long all)"
 
 
+#     fig = pyfolio.create_simple_tear_sheet(
     fig = pyfolio.create_returns_tear_sheet(
         returns, benchmark_rets=benchmark_rets, return_fig=True
     )

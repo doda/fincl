@@ -2,8 +2,7 @@
 
 __all__ = ['downsample', 'alpha', 'join_importances', 'pick_good_features', 'combine_symbol_decks', 'train_test_split',
            'binarize', 'prepare_payload', 'get_symbols_list', 'abort_early', 'parse_config', 'FORMAT', 'SYMBOL_GROUPS',
-           'load_sample_and_binarize', 'run_feature_engineering', 'prepare_alpha_bins_feature_imps', 'run_ml_pipe',
-           'IGNORE_SYMBOLS', 'run_bt']
+           'load_sample_and_binarize', 'prepare_alpha_bins_feature_imps', 'run_ml_pipe', 'IGNORE_SYMBOLS', 'run_bt']
 
 # Cell
 import numpy as np
@@ -20,7 +19,6 @@ from .load_data import (
     save_bars,
     load_events_b,
     save_events_b,
-    feat_safe_name,
     load_feat,
     save_feat,
     load_imp,
@@ -34,7 +32,7 @@ from .utils import get_daily_vol, NumpyEncoder
 from .get_bins import get_bins, drop_labels
 from .alpha import ma_alpha, bb_alpha
 from .binarize import triple_barrier_method, fixed_horizon
-from .feature_eng import engineer_feature, define_feature_configs
+from .feature_eng import run_feature_engineering, define_feature_configs
 from .reporting import get_reports
 from .models import get_model
 from .feature_importance import feat_importance
@@ -137,7 +135,9 @@ def train_test_split(bars, events, feats, bins, start_date=None, end_date=None):
     y_all = bins
 
     # Drop all rows where we don't have a complete set of features
-    merged = pd.merge(X_all, y_all, left_index=True, right_index=True).dropna()
+    merged = pd.merge(X_all, y_all, left_index=True, right_index=True)
+    merged[(merged == np.inf) | (merged == -np.inf)] = np.nan
+    merged = merged.dropna()
     merged = merged.truncate(before=start_date, after=end_date)
 
     X_all = merged.drop(columns=bins.columns)
@@ -221,6 +221,7 @@ def parse_config(data):
         "downsampling": "cusum",
         "symbols": data.get("symbols"),
         "symbol_groups": data.get("symbol_groups"),
+        "features": data.get("features", define_feature_configs()),
         "test_procedure": "walk_forward",
         "classifier": data["classifier"],
         "bar_type": data["bar_type"],
@@ -249,7 +250,8 @@ def parse_config(data):
 # Cell
 
 # TODO: Figure out why Lean Hogs break our code
-IGNORE_SYMBOLS = ["@LH#C"]
+# TODO: Figure out why SP oversamples so mad in the far past
+IGNORE_SYMBOLS = ["@LH#C", "@SP#C"]
 
 
 def load_sample_and_binarize(config):
@@ -291,25 +293,6 @@ def load_sample_and_binarize(config):
     return deck
 
 
-def run_feature_engineering(config, deck):
-    """Load already-engineered features or engineer if we can't"""
-    for symbol, symbol_deck in deck.items():
-        logging.debug(f"{symbol}: Feature engineering")
-        bars = symbol_deck['bars']
-        feats = []
-        for feat_config in config["features"]:
-            # We pass a copy in so the feat_eng code can modify that to its hearts content,
-            # while for us the information remains non-redundant
-            feat = engineer_feature(deck, symbol, config, feat_config.copy())["Close"]
-            feat.name = feat_safe_name(feat_config)
-            feats.append(feat)
-        feats2 = pd.concat(feats, axis=1)
-        # Reindex in case of outside feats
-        feats3 = feats2.reindex(index=deck[symbol]['bars'].index)
-        deck[symbol]['feats'] = feats3
-    return deck
-
-
 def prepare_alpha_bins_feature_imps(config, deck):
     for symbol, symbol_deck in deck.items():
         logging.debug(f"{symbol}: Get bins and feature imps")
@@ -343,8 +326,7 @@ def prepare_alpha_bins_feature_imps(config, deck):
                     y_train,
                     cv=config["feat_imp_cv"],
                     method=config["feat_imp_method"],
-                    num_threads=config["num_threads"],
-
+                    n_jobs=config["n_jobs"],
                 )
                 save_imp(symbol, config, imp)
 
@@ -423,7 +405,6 @@ def run_ml_pipe(config, deck):
 
 def run_bt(**data):
     config = parse_config(data)
-    config['features'] = define_feature_configs()
     logging.info(f"config: {config}")
 
     if abort_early(config):

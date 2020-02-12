@@ -13,18 +13,18 @@ from sklearn.metrics import log_loss, accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import BaggingClassifier
 
-
 def feat_importance(
     events,
     X,
     y,
-    n_estimators=1000,
+    n_estimators=200,#1000
     cv=10,
     max_samples=1.0,
     pct_embargo=0,
     scoring="accuracy",
     method="MDI",
     min_w_leaf=0.0,
+    n_jobs=None,
     **kwargs
 ):
     logging.info(f"feat_importance for {len(X.columns)} features")
@@ -43,6 +43,7 @@ def feat_importance(
         max_features=1.0,
         max_samples=max_samples,
         oob_score=True,
+        n_jobs=n_jobs,
     )
 
     if method == "MDI":
@@ -55,7 +56,6 @@ def feat_importance(
             X=X,
             y=y,
             cv=cv,
-            sample_weight=sample_weight,
             t1=events["t1"],
             pct_embargo=pct_embargo,
             scoring=scoring,
@@ -79,7 +79,7 @@ def feat_imp_MDI(fit, feat_names):
     return imp
 
 
-def feat_imp_MDA(clf, X, y, cv, sample_weight, t1, pct_embargo, scoring="neg_log_loss"):
+def feat_imp_MDA(clf, X, y, cv, t1, pct_embargo, scoring="neg_log_loss"):
     # feat importance based on OOS score reduction
     if scoring not in ["neg_log_loss", "accuracy"]:
         raise ValueError("wrong scoring method")
@@ -89,17 +89,18 @@ def feat_imp_MDA(clf, X, y, cv, sample_weight, t1, pct_embargo, scoring="neg_log
     cv_gen = PurgedKFold(n_splits=cv, t1=t1, pct_embargo=pct_embargo)
     scr0, scr1 = pd.Series(), pd.DataFrame(columns=X.columns)
     for i, (train, test) in enumerate(cv_gen.split(X=X)):
-        X0, y0, w0 = X.iloc[train, :], y.iloc[train], sample_weight.iloc[train]
-        X1, y1, w1 = X.iloc[test, :], y.iloc[test], sample_weight.iloc[test]
-        fit = clf.fit(X=X0, y=y0, sample_weight=w0.values)
+        logging.debug(f"MDA with {cv}-fold CV: fold {i+1}/{cv}")
+        X0, y0 = X.iloc[train, :], y.iloc[train]
+        X1, y1 = X.iloc[test, :], y.iloc[test]
+        fit = clf.fit(X=X0, y=y0)
         if scoring == "neg_log_loss":
             prob = fit.predict_proba(X1)
             scr0.loc[i] = -log_loss(
-                y1, prob, sample_weight=w1.values, labels=clf.classes_
+                y1, prob, labels=clf.classes_
             )
         else:
             pred = fit.predict(X1)
-            scr0.loc[i] = accuracy_score(y1, pred, sample_weight=w1.values)
+            scr0.loc[i] = accuracy_score(y1, pred)
 
         for j in X.columns:
             X1_ = X1.copy(deep=True)
@@ -107,11 +108,11 @@ def feat_imp_MDA(clf, X, y, cv, sample_weight, t1, pct_embargo, scoring="neg_log
             if scoring == "neg_log_loss":
                 prob = fit.predict_proba(X1_)
                 scr1.loc[i, j] = -log_loss(
-                    y1, prob, sample_weight=w1.values, labels=clf.classes_
+                    y1, prob, labels=clf.classes_
                 )
             else:
                 pred = fit.predict(X1_)
-                scr1.loc[i, j] = accuracy_score(y1, pred, sample_weight=w1.values)
+                scr1.loc[i, j] = accuracy_score(y1, pred)
 
     imp = (-scr1).add(scr0, axis=0)
     if scoring == "neg_log_loss":
