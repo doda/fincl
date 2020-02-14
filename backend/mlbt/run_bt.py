@@ -196,8 +196,11 @@ def get_symbols_list(config):
 
 
 def abort_early(config):
+    symbols = get_symbols_list(config)
+    if not symbols:
+        logging.info("No valid symbols, aborting...")
+        return True
     if config["check_completed"]:
-        symbols = get_symbols_list(config)
         payload = load_payload(symbols, config)
         if payload is not None:
             logging.info("We have the payload, not recomputing")

@@ -212,7 +212,7 @@ def find_params(d, s=None):
 
 def imp_path(symbol, c):
     feat_names = set.union(*[find_params(feat) for feat in c['features']])
-    feat_names = '-'.join(sorted(feat_names - {'name', 'window', 'stdev', 'lag'}))
+    feat_names = ''.join([x[:2] for x in sorted(feat_names - {'name', 'window', 'stdev', 'lag'})])
     return DATA_DIR / c['bar_type'] / f"{symbol}_fimp_{c['binarize']}_{c['binarize_params']}_{c['alpha']}_{c['alpha_params']}_{feat_names}_{c['feat_imp_method']}.h5"
 
 

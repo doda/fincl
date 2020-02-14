@@ -83,7 +83,7 @@ def calc_returns(df):
 def create_tearsheet(close, signal, file_name, report_type, benchmark_rets=None):
     logging.info(f"Creating {report_type} tearsheet for {file_name}")
     # Map long/short to long/flat
-    # signal = (signal + 1) / 2
+    signal = (signal + 1) / 2
     pos_size = 10000
     df, df_wo_costs, cost_stats = simulate_pnl(close, signal, pos_size)
     returns = calc_returns(df)
