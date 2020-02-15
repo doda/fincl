@@ -22,36 +22,6 @@ from sklearn.dummy import DummyClassifier
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 
-# from dask.distributed import Client
-# client = Client()
-
-
-# def tpot_fit(events, X_all, y_all, num_threads):
-#     inner_cv = PurgedKFold(
-#         n_splits=5, t1=events["t1"], pct_embargo=0, random_state=42,
-#     )
-#     clf = tpot.TPOTClassifier(generations=500,
-#                               population_size=60,
-#                               offspring_size=None,
-# #                               mutation_rate=0.9,
-# #                               crossover_rate=0.1,
-#                               scoring='neg_log_loss',
-#                               cv=inner_cv,
-# #                               subsample=1.0,
-#                               n_jobs=num_threads,
-#                               max_time_mins=500,
-#                               max_eval_time_mins=5,
-#                               random_state=42,
-#                               periodic_checkpoint_folder='checks',
-# #                               use_dask=True,
-#                               config_dict='TPOT light',
-#                               verbosity=2,)
-
-#     clf.fit(X_all, y_all)
-#     clf.export('tpot_pipeline.py')
-
-
-
 
 def clf_hyper_fit(
     feat,
@@ -141,8 +111,6 @@ def get_model(
 ):
     # X_all and y_all in this context are X_train and y_train in the grander scheme
     logging.info(f"Getting model {clf_type}")
-#     if clf_type == "tpot":
-#         return tpot_fit(events, X_all, y_all, num_threads)
 
     param_grids = {
         "random_forest": RF_PARAM_GRID,
