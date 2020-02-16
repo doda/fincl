@@ -109,7 +109,7 @@ def get_data(symbol, frequency, start_date, end_date):
         end_date,
     )
 
-def process_bars(bars, size, type_):
+def process_bars(bars, size, type_, resolution="MIN"):
     # Renaming our bar columns & format for mlfinlab for processing and then back into our original format
     # OHL from 1-min bars are ignored
     fun = {
@@ -122,7 +122,7 @@ def process_bars(bars, size, type_):
     bars = bars[['Close', 'Volume']].reset_index()
     bars.columns = ['date_time', 'close', 'volume']
     if type_ == "time":
-        s_bars = fun(bars, resolution="MIN", num_units=size)
+        s_bars = fun(bars, resolution=resolution, num_units=size)
     else:
         s_bars = fun(bars, threshold=size)
     bars = s_bars[['date_time', 'open', 'high', 'low', 'close', 'volume', 'cum_dollar_value', 'cum_ticks', 'cum_buy_volume']]
