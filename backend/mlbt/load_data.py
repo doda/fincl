@@ -14,6 +14,7 @@ import pandas as pd
 import json
 import logging
 from path import Path
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from mlfinlab.data_structures import get_dollar_bars, get_tick_bars, get_time_bars, get_volume_bars
 
@@ -112,6 +113,7 @@ def process_bars(bars, size, type_):
     # Renaming our bar columns & format for mlfinlab for processing and then back into our original format
     # OHL from 1-min bars are ignored
     fun = {
+        "time": get_time_bars,
         "tick": get_tick_bars,
         "volume": get_volume_bars,
         "dollar": get_dollar_bars,
@@ -119,10 +121,16 @@ def process_bars(bars, size, type_):
 
     bars = bars[['Close', 'Volume']].reset_index()
     bars.columns = ['date_time', 'close', 'volume']
-    s_bars = fun(bars, threshold=size)
+    if type_ == "time":
+        s_bars = fun(bars, resolution="MIN", num_units=size)
+    else:
+        s_bars = fun(bars, threshold=size)
     bars = s_bars[['date_time', 'open', 'high', 'low', 'close', 'volume', 'cum_dollar_value', 'cum_ticks', 'cum_buy_volume']]
     bars.columns = ['Time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Dollar Volume', 'Num Ticks', 'Buy Volume']
-    bars = bars.set_index('Time', drop=False)
+    if type_ == "time":
+        bars = bars.set_index(s_bars['date_time'].apply(datetime.fromtimestamp).values)
+    else:
+        bars = bars.set_index('Time', drop=False)
     return bars
 
 
