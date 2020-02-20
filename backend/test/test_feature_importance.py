@@ -6,7 +6,7 @@ from mlbt.feature_importance import feat_importance
 from sklearn.datasets import make_classification
 
 def get_test_data(n_features=40, n_informative=10, n_redundant=10, n_samples=10000):
-    # generate a random dataset for a classification problem    
+    # generate a random dataset for a classification problem
     trnsX, cont = make_classification(n_samples=n_samples, n_features=n_features, n_informative=n_informative, n_redundant=n_redundant, random_state=0, shuffle=False)
     df0 = pd.date_range(periods=n_samples, freq=pd.tseries.offsets.Minute(), end=pd.datetime.today())
     trnsX = pd.DataFrame(trnsX, index=df0)
@@ -21,10 +21,10 @@ def get_test_data(n_features=40, n_informative=10, n_redundant=10, n_samples=100
 
 @pytest.fixture
 def test_data():
-	return get_test_data(n_features=3, n_informative=2, n_redundant=0, n_samples=100)
+	return get_test_data(n_features=3, n_informative=2, n_redundant=0, n_samples=1000)
 
 
-def test_a(config, test_data):
+def test_feature_importance_simple(config, test_data):
 	np.random.seed(0)
 	X, cont = test_data
 	imp = feat_importance(
@@ -38,6 +38,7 @@ def test_a(config, test_data):
 	)
 
 	assert imp.to_dict() == {
-		'mean': {'I_0': 0.125, 'N_0': 0.3666666666666666, 'I_1': 0.5222222222222223},
-		'std': {'I_0': 0.11180339887498948, 'N_0': 0.1855921454276674, 'I_1': 0.2163102481547976}
+		'mean': {'N_0': -0.005036630036629894, 'I_0': 0.11762679937022064, 'I_1': 0.2120098039215686},
+		'std': {'N_0': 0.10274743930189172, 'I_0': 0.11044901162498243, 'I_1': 0.154414323732988},
+		'oos': {'I_0': 0.946, 'I_1': 0.946, 'N_0': 0.946},
 	}

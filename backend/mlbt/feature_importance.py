@@ -49,9 +49,10 @@ def feat_importance(
     if method == "MDI":
         fit = clf.fit(X=X, y=y)
         imp = feat_imp_MDI(fit, feat_names=X.columns)
+        oos = 0.0 # TODO
     elif method == "MDA":
         sample_weight = pd.Series(1, index=events.index)
-        imp = feat_imp_MDA(
+        imp, oos = feat_imp_MDA(
             clf=clf,
             X=X,
             y=y,
@@ -62,7 +63,7 @@ def feat_importance(
         )
 
     imp = imp.sort_values("mean", ascending=True)
-
+    imp['oos'] = oos
     return imp
 
 
@@ -123,4 +124,4 @@ def feat_imp_MDA(clf, X, y, cv, t1, pct_embargo, scoring="neg_log_loss"):
     imp = pd.concat(
         {"mean": imp.mean(), "std": imp.std() * imp.shape[0] ** -0.5}, axis=1
     )
-    return imp
+    return imp, scr0.mean()

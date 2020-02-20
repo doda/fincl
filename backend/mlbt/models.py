@@ -69,7 +69,7 @@ def clf_hyper_fit(
 
 
 RF_PARAM_GRID = {
-    "n_estimators": np.arange(25, 525, 25),
+    "n_estimators": np.arange(10, 200, 10),
     "max_depth": np.arange(1, 11, 1),
 }
 
@@ -77,14 +77,14 @@ XGB_PARAM_GRID = {
     "max_depth": np.arange(1, 8, 1),
     "colsample_bytree": np.arange(0.3, 1.1, 0.1),
     "gamma": np.arange(0.0, 0.55, 0.05),
-    "n_estimators": np.arange(25, 275, 25),
+    "n_estimators": np.arange(10, 200, 10),
 }
 
 LGBM_PARAM_GRID = {
     "max_depth": np.arange(1, 8, 1),
     "num_leaves": np.arange(8, 130, 2),
     "colsample_bytree": np.arange(0.3, 1.05, 0.05),
-    "n_estimators": np.arange(25, 275, 25),
+    "n_estimators": np.arange(10, 200, 10),
 }
 
 KNN_PARAM_GRID = {"n_neighbors": np.arange(1, 31, 1), "p": np.arange(1, 4, 1)}

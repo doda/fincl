@@ -1,0 +1,50 @@
+Bloomberg,Description,Sector,Exchange,riskon,iqsymbol,ibkrsymbol,ibkrexchange,iqrootsymbol,multiplier,mintick
+AD1 Curncy,Australian Dollar Futures,Currency,Chicago Mercantile Exchange,0,@AD#C,AUD,GLOBEX,@AD,100000.0,0.0001
+BP1 Curncy,British Pound Futures,Currency,Chicago Mercantile Exchange,0,@BP#C,GBP,GLOBEX,@BP,62500.0,0.0001
+CD1 Curncy,Canadian Dollar Futures,Currency,Chicago Mercantile Exchange,0,@CD#C,CAD,GLOBEX,@CD,100000.0,5e-05
+ED1 Comdty,Eurodollar  Futures CME,Interest Rate,Chicago Mercantile Exchange,-1,@ED#C,GE,GLOBEX,@ED,2500.0,0.005
+ES1 Index,S&P 500 E-Mini Futures,Equity Index,Chicago Mercantile Exchange,1,@ES#C,ES,GLOBEX,@ES,50.0,0.25
+NQ1 Index,NASDAQ E-Mini Futures,Equity Index,Chicago Mercantile Exchange,1,@NQ#C,NQ,GLOBEX,@NQ,20.0,0.25
+FC1 Comdty,Feeder Cattle Futures,Agriculture,Chicago Mercantile Exchange,0,@GF#C,GF,GLOBEX,@GF,50000.0,0.00025
+LC1 Comdty,Live Cattle Futures,Agriculture,Chicago Mercantile Exchange,0,@LE#C,LE,GLOBEX,@LE,40000.0,0.00025
+LH1 Comdty,Lean Hogs Futures,Agriculture,Chicago Mercantile Exchange,0,@LH#C,HE,GLOBEX,@LH,40000.0,0.00025
+PE1 Curncy,Mexican Peso Futures,Currency,Chicago Mercantile Exchange,0,@HE#C,HE,GLOBEX,@HE,40000.0,0.00025
+FA1 Index,S&P 400 MidCap E-Mini Futures,Equity Index,Chicago Mercantile Exchange,1,@EMD#C,EMD,GLOBEX,@EMD,100.0,0.1
+NX1 Index,Nikkei 225 Futures CME,Equity Index,Chicago Mercantile Exchange,1,@NKD#C,NKD,GLOBEX,@NKD,5.0,5.0
+NV1 Curncy,New Zealand Dollar Futures,Currency,Chicago Mercantile Exchange,0,@NE#C,NZD,GLOBEX,@NE,100000.0,0.0001
+RP1 Curncy,Euro/British Pound Futures,Currency,Chicago Mercantile Exchange,0,@RP#C,RP,GLOBEX,@RP,125000.0,5e-05
+SP1 Index,S&P 500 Futures,Equity Index,Chicago Mercantile Exchange,1,@SP#C,SPX,GLOBEX,@SP,250.0,0.1
+RX1 Comdty,Euro-Bund 10-Year Futures,Interest Rate,Eurex,-1,BD#C,GBL,DTB,BD,1000.0,0.01
+DU1 Comdty,Euro-Schatz 2-Year Futures,Interest Rate,Eurex,-1,EZ#C,GBS,DTB,EZ,1000.0,0.005
+GX1 Index,DAX Index Futures,Equity Index,Eurex,1,XG#C,DAX,DTB,XG,25.0,0.5
+VG1 Index,EURO STOXX 50 Index Futures,Equity Index,Eurex,1,EX#C,ESTX50,DTB,EX,10.0,1.0
+YM1 Index,E-mini Dow Jones Industrial Average Index Futures,Equity Index,Chicago Board of Trade,1,@YM#C,YM,ECBOT,@YM,5.0,1.0
+BO1 Comdty,Soybean Oil Futures,Agriculture,Chicago Board of Trade,0,@BO#C,ZL,ECBOT,@BO,60000.0,0.0001
+C 1 Comdty,Corn Futures,Agriculture,Chicago Board of Trade,0,@C#C,ZC,ECBOT,@C,5000.0,0.0025
+FV1 Comdty,US 5-Year T-Note Futures,Interest Rate,Chicago Board of Trade,-1,@FV#C,ZF,ECBOT,@FV,1000.0,0.0078125
+TY1 Comdty,US 10-Year T-Note Futures,Interest Rate,Chicago Board of Trade,-1,@TY#C,ZN,ECBOT,@TY,1000.0,0.015625
+TU1 Comdty,US 2-Year T-Note Futures,Interest Rate,Chicago Board of Trade,-1,@TU#C,ZT,ECBOT,@TU,2000.0,0.00390625
+UB1 Comdty,US 30-Year Bond Futures,Interest Rate,Chicago Board of Trade,-1,@UB#C,ZB,ECBOT,@UB,1000.0,0.03125
+O 1 Comdty,Oats Futures,Agriculture,Chicago Board of Trade,0,@O#C,ZO,ECBOT,@O,5000.0,0.0025
+SM1 Comdty,Soybean Meal Futures,Agriculture,Chicago Board of Trade,0,@SM#C,ZM,ECBOT,@SM,100.0,0.1
+S 1 Comdty,Soybean Futures,Agriculture,Chicago Board of Trade,0,@S#C,ZS,ECBOT,@S,5000.0,0.0025
+W 1 Comdty,Wheat Futures CBOT,Agriculture,Chicago Board of Trade,0,@W#C,ZW,ECBOT,@W,5000.0,0.0025
+MES1 Index,MSCI Emerging Markets Mini Futures,Equity Index,ICE Futures US Indices,1,@MME#C,MXEF,NYSELIFFE,@MME,50.0,0.1
+CC1 Comdty,Cocoa Futures,Agriculture,ICE Futures US Softs,0,@CC#C,CC,NYBOT,@CC,10.0,1.0
+CT1 Comdty,Cotton #2 Futures,Agriculture,ICE Futures US Softs,0,@CT#C,CT,NYBOT,@CT,50000.0,0.0001
+JO1 Comdty,Orange Juice Futures,Agriculture,ICE Futures US Softs,0,@OJ#C,OJ,NYBOT,@OJ,15000.0,0.0005
+KC1 Comdty,Coffee “C” Futures,Agriculture,ICE Futures US Softs,0,@KC#C,KC,NYBOT,@KC,37500.0,0.0005
+SB1 Comdty,Sugar #11 Futures,Agriculture,ICE Futures US Softs,0,@SB#C,SB,NYBOT,@SB,112000.0,0.0001
+QS1 Comdty,Low Sulphur Gasoil Futures ICE,Energy,ICE Futures Europe Commodities,1,GAS#C,GOIL,IPE,GAS,100.0,0.25
+Z 1 Index,FTSE 100 Index Futures,Equity Index,ICE Futures Europe Financials,1,LF#C,Z,ICEEU,LF,1000.0,0.005
+G 1 Comdty,Long Gilt Futures,Interest Rate,ICE Futures Europe Financials,-1,LG#C,R,ICEEU,LG,1000.0,0.01
+CL1 Comdty,Light Crude Oil Futures NYMEX,Energy,New York Mercantile Exchange,1,QCL#C,CL,NYMEX,QCL,1000.0,0.01
+HO1 Comdty,Heating Oil #2 Futures NYMEX,Energy,New York Mercantile Exchange,1,QHO#C,HO,NYMEX,QHO,42000.0,0.0001
+NG1 Comdty,Natural Gas Futures NYMEX,Energy,New York Mercantile Exchange,1,QNG#C,NG,NYMEX,QNG,10000.0,0.001
+PA1 Comdty,Palladium Futures NYMEX,Metals,New York Mercantile Exchange,0,QPA#C,PA,NYMEX,QPA,100.0,0.1
+PL1 Comdty,Platinum Futures NYMEX,Metals,New York Mercantile Exchange,0,QPL#C,PL,NYMEX,QPL,50.0,0.1
+EO1 Comdty,Natural Gas E-Mini Futures,Energy,New York Mercantile Exchange,1,@QG#C,QG,NYMEX,@QG,2500.0,0.005
+EC1 Comdty,Crude Oil E-Mini Futures NYMEX,Energy,New York Mercantile Exchange,1,@QM#C,QM,NYMEX,@QM,500.0,0.025
+GC1 Comdty,Gold Futures COMEX,Metals,Commodity Exchange Inc.,0,QGC#C,GC,NYMEX,QGC,100.0,0.1
+HG1 Comdty,Copper High Grade Futures COMEX,Metals,Commodity Exchange Inc.,1,QHG#C,HG,NYMEX,QHG,25000.0,0.0005
+SI1 Comdty,Silver Futures COMEX,Metals,Commodity Exchange Inc.,0,QSI#C,SI,NYMEX,QSI,5000.0,0.005
