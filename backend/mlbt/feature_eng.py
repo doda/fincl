@@ -332,89 +332,19 @@ def compute_feature(deck, for_symbol, config, feat_conf, symbol, df):
 
 def define_feature_configs():
     """Stake out the list of features that is the basis for our features matrix"""
-    VIX = 'VIX.XO'
-    ES = '@ES#C'
-    TY = '@TY#C'
-
-    ffd_f = {"name": "ffd", "d": 0.3}
+    ffd_f = {"name": "ffd", "d": 0.5}
     log_ret = {"name": "log_ret"}
-    vix_1h = {"name": "make_bars", "type_": "time", "size": 60, "symbol": VIX}
-    log_ret_vix = {"name": "log_ret", "symbol": vix_1h}
-
-    es_1h = {"name": "make_bars", "type_": "time", "size": 60, "symbol": ES}
-    ty_1h = {"name": "make_bars", "type_": "time", "size": 60, "symbol": TY}
-    log_ret_es_1h = {"name": "log_ret", "symbol": es_1h}
-    log_ret_ty_1h = {"name": "log_ret", "symbol": ty_1h}
-
-    volratio = {"name": "volratio"}
-    es_sadf = {"name": "sadf", "symbol": {"name": "make_bars", "type_": "time", "size": 1, "resolution": "D", "symbol": '@ES#C'}}
-
-    put_call_ratio = {"name": "clip", "lower": 0, "upper": 10, "symbol": "PCRATIO.Z"}
-
     features = [
+        log_ret,
+        {"name": "close", "symbol": 'VIX.XO'},
         ffd_f,
     ]
 
-    windows = [25, 50, 250, 500]
-
-    # Dollar bar basis (roughly hourly)
-    for window in windows:
-        features.append({"name": "log_ret", "periods": window})
-
-        roll = {"name": "roll", "window": window}
-        features.append(roll)
-#         features.append({"name": "rolling_stdev", "window": window, "symbol": roll})
-
-        rollimp = {"name": "rollimp", "window": window}
-        features.append(rollimp)
-#         features.append({"name": "rolling_stdev", "window": window, "symbol": rollimp})
-
-        amihud = {"name": "amihud", "window": window}
-        features.append(amihud)
-#         features.append({"name": "rolling_stdev", "window": window, "symbol": amihud})
-
-        kyle = {"name": "kyle", "window": window}
-        features.append(kyle)
-#         features.append({"name": "rolling_stdev", "window": window, "symbol": kyle})
-
-        volratio_ewm_mean = {"name": "ewm_mean", "window": window, "symbol": volratio}
-        features.append(volratio_ewm_mean)
-
-        features.append({"name": "rolling_stdev", "window": window, "symbol": volratio})
-        features.append({"name": "lag", "lag": window, "symbol": volratio_ewm_mean})
-
-        # Volatilty
-        features.append({"name": "rolling_stdev", "window": window, "symbol": log_ret_vix})
-        rolling_stdev_log_ret = {"name": "rolling_stdev", "window": window, "symbol": log_ret}
-
-        features.append(rolling_stdev_log_ret)
-
-        features.append({"name": "rolling_stdev", "window": window, "symbol": rolling_stdev_log_ret})
-        features.append({"name": "rolling_stdev", "window": window, "symbol": ffd_f})
-
-
-#     # Dollar bar basis (roughly hourly)
-#     windows_ent = [250, 500]
-#     for window in windows_ent:
-#         features.append({"name": "entropy", "method": "lz", "encoding": "sigma", "window": window, "symbol": log_ret})
-#         features.append({"name": "entropy", "method": "konto", "encoding": "sigma", "window": window, "symbol": log_ret, "konto_len": (window // 10) + 1})
-
-
-#     # Minutely basis
-#     windows_pcr = [1800, 3600, 7200]
-#     for pc_window in windows_pcr:
-#         # PCRATIO #
-#         put_call_ratio_ewm = {"name": "ewm_mean", "window": pc_window, "symbol": put_call_ratio}
-#         features.append(put_call_ratio_ewm)
-#         # lags
-#         features.append({"name": "lag", "lag": pc_window, "symbol": put_call_ratio_ewm})
-
-
-#     # SADF calculated on a daily basis
-#     sadf_ewm = {"name": "ewm_mean", "window": 5, "symbol": es_sadf}
-#     features.append(sadf_ewm)
-#     features.append({"name": "lag", "lag": 5, "symbol": sadf_ewm})
-#     features.append({"name": "lag", "lag": 50, "symbol": sadf_ewm})
-
+    for window in [10, 25, 50, 250, 500, 1000]:
+        features.append({"name": "roll", "window": window})
+        features.append({"name": "rollimp", "window": window})
+        features.append({"name": "amihud", "window": window})
+        features.append({"name": "kyle", "window": window})
+        features.append({"name": "ewm_mean", "window": window, "symbol": {"name": "volratio"}})
 
     return features

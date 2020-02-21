@@ -77,14 +77,14 @@ XGB_PARAM_GRID = {
     "max_depth": np.arange(1, 8, 1),
     "colsample_bytree": np.arange(0.3, 1.1, 0.1),
     "gamma": np.arange(0.0, 0.55, 0.05),
-    "n_estimators": np.arange(10, 200, 10),
+    "n_estimators": np.arange(25, 275, 25),
 }
 
 LGBM_PARAM_GRID = {
     "max_depth": np.arange(1, 8, 1),
     "num_leaves": np.arange(8, 130, 2),
     "colsample_bytree": np.arange(0.3, 1.05, 0.05),
-    "n_estimators": np.arange(10, 200, 10),
+    "n_estimators": np.arange(25, 275, 25),
 }
 
 KNN_PARAM_GRID = {"n_neighbors": np.arange(1, 31, 1), "p": np.arange(1, 4, 1)}
@@ -135,6 +135,9 @@ def get_model(
     # Balance class weights
     if clf_type == "random_forest":
         extra_hyper_params["class_weight"] = "balanced_subsample"
+#     if clf_type == "lgbm":
+#         extra_hyper_params["bagging_fraction"] = 0.5
+#         extra_hyper_params["bagging_freq"] = 10
     if clf_type in ["xgboost", "lgbm"]:
         neg, pos = y_all.value_counts().values
         extra_hyper_params["scale_pos_weight"] = neg / pos

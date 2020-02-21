@@ -63,19 +63,24 @@ module.exports = {
       "question" : "Forecast horizon",
       "input" : {
         "type" : "selectInput",
-        "options" : [{
-          "text" : "10 CUSUM downsampled Dollar Bars",
-          "value" : "fixed_horizon_10",
-        }, {
+        "options" : [
+        {
+          "text" : "6 CUSUM downsampled Dollar Bars",
+          "value" : "fixed_horizon_6",
+        },
+        {
+          "text" : "12 CUSUM downsampled Dollar Bars",
+          "value" : "fixed_horizon_12",
+        },
+        {
           "text" : "25 CUSUM downsampled Dollar Bars",
           "value" : "fixed_horizon_25",
-        }, {
+        },
+        {
           "text" : "50 CUSUM downsampled Dollar Bars",
           "value" : "fixed_horizon_50",
-        }, {
-          "text" : "100 CUSUM downsampled Dollar Bars",
-          "value" : "fixed_horizon_100",
-        }]
+        }
+        ]
       }
     },
   ]

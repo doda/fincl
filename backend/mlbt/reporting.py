@@ -83,7 +83,7 @@ def get_reports(
     elif test_procedure == "cpcv":
         cv = CombPurgedKFoldCV(n_splits=5, n_test_splits=1)
 
-    y_test, y_pred, y_pred_proba, test_indices = run_val(
+    y_true, y_pred, y_pred_proba, test_indices = run_val(
         cv, events_test, clf, X_train, y_train, X_test, y_test
     )
 
@@ -91,15 +91,15 @@ def get_reports(
 
     with_ml = {
         "classification_report_str": classification_report(
-            y_true=y_test, y_pred=y_pred
+            y_true=y_true, y_pred=y_pred
         ),
         "classification_report": classification_report(
-            y_true=y_test, y_pred=y_pred, output_dict=True
+            y_true=y_true, y_pred=y_pred, output_dict=True
         ),
-        "f1_score": f1_score(y_test, y_pred, average="micro", zero_division=0),
-        "confusion_matrix": confusion_matrix(y_test, y_pred),
-        "roc_curve": roc_curve(y_test, y_pred),
-        "roc_auc_score": roc_auc_score(y_test, y_pred_proba),
+        "f1_score": f1_score(y_true, y_pred, average="macro", zero_division=0),
+        "confusion_matrix": confusion_matrix(y_true, y_pred),
+        "roc_curve": roc_curve(y_true, y_pred),
+        "roc_auc_score": roc_auc_score(y_true, y_pred_proba),
         "hyper_params": hyper_params,
     }
     if not use_alpha:
@@ -108,13 +108,13 @@ def get_reports(
     y_pred_ones = np.ones(y_pred.shape)
     no_ml = {
         "classification_report_str": classification_report(
-            y_true=y_test, y_pred=y_pred_ones
+            y_true=y_true, y_pred=y_pred_ones
         ),
         "classification_report": classification_report(
-            y_true=y_test, y_pred=y_pred_ones, output_dict=True
+            y_true=y_true, y_pred=y_pred_ones, output_dict=True
         ),
-        "f1_score": f1_score(y_test, y_pred_ones, average="micro", zero_division=0),
-        "confusion_matrix": confusion_matrix(y_test, y_pred_ones),
+        "f1_score": f1_score(y_true, y_pred_ones, average="macro", zero_division=0),
+        "confusion_matrix": confusion_matrix(y_true, y_pred_ones),
         "roc_auc_score": None,
         "hyper_params": None,
     }

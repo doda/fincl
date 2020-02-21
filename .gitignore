@@ -147,6 +147,7 @@ backend/docs
 frontend/public/payloads
 *_dump_*
 *calcium*
+*settings_pers*
 __pycache__
 .DS_Store
 yarn.lock
