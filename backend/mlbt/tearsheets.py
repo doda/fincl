@@ -104,14 +104,14 @@ def join_signals(dfs):
 
 
 def create_frontend_payload(file_names, force=False, our_config=None):
-    combine_multi = len(file_names) > 1
     if our_config is None:
         our_config = make_default_config()
 
+    combine_multi = len(file_names) > 1
     if combine_multi:
         new_file_name = our_config["F_PAYLOAD_DIR"] / f"f_payload_MULTI_{len(file_names)}.json"
     else:
-        new_file_name = our_config["F_PAYLOAD_DIR"] / file_name.basename().replace("payload_", "f_payload_", 1)
+        new_file_name = our_config["F_PAYLOAD_DIR"] / file_names[0].basename().replace("payload_", "f_payload_", 1)
 
     if abort_early(force, new_file_name):
         return
@@ -159,18 +159,15 @@ def create_tearsheet(config, close, signal, file_name, report_type, benchmark_re
     # Map long/short to long/flat
     signal = (signal + 1) / 2
     pos_size = 20000
-    df_net, df_gross, cost_stats = simulate_pnl(config, close, signal, pos_size)
+    df_net, _, cost_stats = simulate_pnl(config, close, signal, pos_size)
     returns_net = calc_returns(df_net)
     returns_net.name = report_type.title()
-    returns_gross = calc_returns(df_gross)
-    returns_gross.name = report_type.title()
 
     if report_type == "primary":
         long_all = pd.DataFrame(1, columns=signal.columns, index=signal.index)
         df_bench, _, _ = simulate_pnl(config, close, long_all, pos_size)
         benchmark_rets = calc_returns(df_bench)
         benchmark_rets.name = "Benchmark (long all)"
-
 
     fig = pyfolio.create_returns_tear_sheet(
         returns_net, benchmark_rets=benchmark_rets, return_fig=True
@@ -179,7 +176,6 @@ def create_tearsheet(config, close, signal, file_name, report_type, benchmark_re
     fig.savefig(fig_file_name, bbox_inches="tight", pad_inches=0)
 
     p_stats = perf_stats(returns_net)
-    p_stats_wo_costs = perf_stats(returns_gross)
     dd_table = gen_drawdown_table(returns_net, 5)
 
     signal = signal.resample("1B").last()
@@ -194,9 +190,8 @@ def create_tearsheet(config, close, signal, file_name, report_type, benchmark_re
         {
             "fig_file_name": str(Path(fig_file_name).basename()),
             "p_stats": p_stats.to_dict(),
-            "p_stats_wo_costs": p_stats_wo_costs.to_dict(),
             "dd_table": dd_table.to_dict(),
-            "signal": signal.to_csv(),  # CSVs are a lot more space-efficient for this dense 1500*50 table
+            "signal": signal.to_csv(),  # CSV is a lot more space-efficient for this dense 1500*50 table
             "cost_stats": cost_stats,
         },
     )
