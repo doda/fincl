@@ -114,9 +114,17 @@ class App extends React.Component {
   }
 
   onUpdate = (form_data) => {
-    const str = makePayloadStringObj(form_data)
-    if (_.includes(str, 'undefined')) return
-    const url = process.env.PUBLIC_URL + '/payloads/f_payload_agriculture-currency-energy-equity_index-interest_rate-metals_dollar_' + str + '.json'
+    let str, file_name
+    console.log(form_data)
+    if (form_data.classifier === 'all_models') {
+        file_name = 'f_payload_MULTI_12.json'
+    } else {
+        str = makePayloadStringObj(form_data)
+        if (_.includes(str, 'undefined')) return
+        file_name = 'f_payload_agriculture-currency-energy-equity_index-interest_rate-metals_dollar_' + str + '.json'
+    }
+
+    const url = process.env.PUBLIC_URL + '/payloads/' + file_name
     const that = this
     that.setState({
       loading: true,

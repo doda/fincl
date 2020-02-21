@@ -257,7 +257,6 @@ def run_feature_engineering(config, deck):
             # while for us the information remains non-redundant
             name = safe_feat_name(feat_config, safe_for_fs=False)
             feat = engineer_feature(deck, symbol, config, feat_config)["Close"]
-#             logging.debug(f'Got {feat.shape} shape for feature: {name}')
             feat.name = name
             bars_index = deck[symbol]['bars'].index
             if feat.index.shape != bars_index.shape:

@@ -85,6 +85,7 @@ class ClassificationReportTable extends React.Component {
     if (_.isEmpty(this.props.data)) {
       return null
     }
+
     const rep = this.props.data
     const [k1, k2] = _.has(rep, '0.0') ? ['0.0', '1.0'] : ['-1.0', '1.0']
     const [l1, l2] = [_.split(k1, '.')[0], _.split(k2, '.')[0]]
@@ -374,13 +375,22 @@ class ClassificationReport extends React.Component {
     if (_.isEmpty(this.props.data)) {
       return null
     }
+    const displayClassificationReport = this.props.form_data.classifier !== 'all_models'
+
+    let classificationReportTables = null
+    if (displayClassificationReport) {
+      classificationReportTables = (
+        <HidablePanel title="Classification report" defaultOpen>
+         <ClassificationReportExplanation data={this.props.form_data} />
+         <ClassificationReportData data={this.props.data} />
+        </HidablePanel>
+      )
+    }
+
     return (
         <Row key="pstats">
           <Col md={12}>
-            <HidablePanel title="Classification report" defaultOpen>
-             <ClassificationReportExplanation data={this.props.form_data} />
-             <ClassificationReportData data={this.props.data} />
-            </HidablePanel>
+            {classificationReportTables}
             <HidablePanel title="Signals plot">
               <Plot
                 data={getSignalsPlotData(this.props.data.pnl.signal)}
