@@ -5,6 +5,7 @@ __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 index = {"NumpyEncoder": "00_utils.ipynb",
          "get_daily_vol": "00_utils.ipynb",
          "PurgedKFold": "00_utils.ipynb",
+         "undersample": "12_models.ipynb",
          "LENGTH_RANKING": "01_load_data.ipynb",
          "get_symbols": "01_load_data.ipynb",
          "load_contract": "01_load_data.ipynb",

@@ -7,6 +7,7 @@ __all__ = ['mean_of_dfs', 'make_default_config', 'create_frontend_payload_multi'
 
 import pyfolio
 from pyfolio.timeseries import perf_stats, gen_drawdown_table
+import numpy as np
 import pandas as pd
 from path import Path
 from pprint import pprint
@@ -96,7 +97,7 @@ def join_signals(dfs):
     cols = dfs[0].columns
     signals = []
     for col in cols:
-        symbol_signals = pd.concat([df[col] for df in dfs], axis=1).ffill().mean(axis=1)
+        symbol_signals = pd.concat([df[col] for df in dfs if col in df], axis=1).ffill().mean(axis=1)
         signals.append(symbol_signals)
     res = pd.concat(signals, axis=1).ffill()
     res.columns = cols
@@ -121,8 +122,8 @@ def create_frontend_payload(file_names, force=False, our_config=None):
     config = configs[0]
     pay_j = pay_js[0]
     closes = closes[0]
-
     primary_signals = join_signals(primary_signals)
+
     if secondary_signals[0]:
         secondary_signals = join_signals(secondary_signals)
 
@@ -153,12 +154,13 @@ def calc_returns(df):
 
     return df.pct_change()
 
-
 def create_tearsheet(config, close, signal, file_name, report_type, benchmark_rets=None):
     logging.info(f"Creating {report_type} tearsheet for {file_name}")
+    # Due to our train/test split we have few symbols at the beginning of our data sets
+
     # Map long/short to long/flat
     signal = (signal + 1) / 2
-    pos_size = 20000
+    pos_size = 50000
     df_net, _, cost_stats = simulate_pnl(config, close, signal, pos_size)
     returns_net = calc_returns(df_net)
     returns_net.name = report_type.title()
@@ -170,7 +172,9 @@ def create_tearsheet(config, close, signal, file_name, report_type, benchmark_re
         benchmark_rets.name = "Benchmark (long all)"
 
     fig = pyfolio.create_returns_tear_sheet(
-        returns_net, benchmark_rets=benchmark_rets, return_fig=True
+        returns_net,
+        benchmark_rets=benchmark_rets,
+        return_fig=True
     )
     fig_file_name = file_name.replace(".json", f"_{report_type}.png")
     fig.savefig(fig_file_name, bbox_inches="tight", pad_inches=0)

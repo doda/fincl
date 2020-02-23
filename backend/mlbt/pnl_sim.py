@@ -26,27 +26,28 @@ def get_pnl_reports(events, symbols, binarize, binarize_params):
     )
 
     for key, group in events.groupby(events.index.microsecond):
-        closes.append(group["close_p"])
-
+        symbol = symbols[key]
+        close = group["close_p"]
+        close.name = symbol
+        closes.append(close)
         if "side" in group:
             # Meta-labeling
-            alpha_signals.append(group["side"])
+            alpha_s = group["side"]
+            alpha_s.name = symbol
+            alpha_signals.append(alpha_s)
             signal = group["y_pred"] * group["side"]
         else:
             signal = group["y_pred"]
 
         clf_s = avg_active_signal(signal, binarize, binarize_params)
+        clf_s.name = symbol
         clf_signals.append(clf_s)
 
     closes = pd.concat(closes, axis=1).ffill()
-    closes.columns = symbols
-
     clf_signals = pd.concat(clf_signals, axis=1).ffill()
-    clf_signals.columns = symbols
 
     if "side" in events:
         alpha_signals = pd.concat(alpha_signals, axis=1).ffill()
-        alpha_signals.columns = symbols
     else:
         alpha_signals = None
 

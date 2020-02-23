@@ -13,13 +13,17 @@ var TF_question = {
       "value" : "fixed_horizon_12",
     },
     {
-      "text" : "25 CUSUM downsampled Dollar Bars",
-      "value" : "fixed_horizon_25",
-    },
-    {
       "text" : "50 CUSUM downsampled Dollar Bars",
       "value" : "fixed_horizon_50",
-    }
+    },
+    {
+      "text" : "200 CUSUM downsampled Dollar Bars",
+      "value" : "fixed_horizon_200",
+    },
+    {
+      "text" : "400 CUSUM downsampled Dollar Bars",
+      "value" : "fixed_horizon_400",
+    },
     ]
   }
 }
@@ -84,9 +88,6 @@ module.exports = {
           "text" : "Dummy (random) classifier",
           "value" : "dummy",
           "conditionalQuestions": [TF_question],
-        }, {
-          "text" : "Trade all models across all time-frames",
-          "value" : "all_models",
         }]
       }
     },

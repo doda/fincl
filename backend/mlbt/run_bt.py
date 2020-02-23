@@ -132,7 +132,7 @@ def combine_symbol_decks(deck):
     return grand_frames
 
 
-def train_test_split(bars, events, feats, bins, start_date=None, end_date=None):
+def train_test_split(bars, events, feats, bins, start_date, end_date):
     """
     Exclude rows from our engineered features which haven't completed the warmup for all feature columns
     and split the set 50/50 into train & test set

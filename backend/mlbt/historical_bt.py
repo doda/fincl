@@ -11,10 +11,14 @@ import logging
 SLIPPAGE_ESTIMATE = 0.25  # We estimate we'll pay 1/4 of the bid-ask spread
 COMMISSION_ESTIMATE = 1
 
-def simulate_pnl(config, close, signal, pos_size=50000, pos_cap_multi=500, init_capital=7e7):
+def simulate_pnl(config, close, signal, pos_size=50000, pos_cap_multi=1000, init_capital=7e7):
     pos_cap = pos_size * pos_cap_multi
-    volatility = np.log(close).diff().ewm(com=32 * 25).std()
-    prices = (np.log(close).diff() / volatility).cumsum()
+    signal = signal.div(signal.sum(axis=1), axis=0)
+
+    # dirty hack to get a rough value for various volatilities
+    volatility = pd.DataFrame(1, index=close.index, columns=close.columns)
+    for col in close.columns:
+        volatility[col] = np.log(pd.Series(close[col].unique())).diff().std()
 
     currency_pos = (pos_size * signal / volatility).clip(-pos_cap, pos_cap)
     profits_gross = (close.pct_change() * currency_pos.shift(periods=1)).sum(axis=1)

@@ -117,7 +117,7 @@ class App extends React.Component {
     let str, file_name
     console.log(form_data)
     if (form_data.classifier === 'all_models') {
-        file_name = 'f_payload_MULTI_12.json'
+        file_name = 'f_payload_MULTI_15.json'
     } else {
         str = makePayloadStringObj(form_data)
         if (_.includes(str, 'undefined')) return
