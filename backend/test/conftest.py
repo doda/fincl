@@ -30,7 +30,7 @@ def raw_config():
 	    "binarize_params": 50,
 	    "alpha": "none",
 	    "features": features[:1],
-	    "classifier": "lgbm",
+	    "classifier": "xgboost",
 	    "num_threads": 32,
 	    "n_jobs": 32,
 	    "feat_imp_n_estimators": 10,

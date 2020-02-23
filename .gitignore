@@ -151,3 +151,7 @@ frontend/public/payloads
 __pycache__
 .DS_Store
 yarn.lock
+
+data/dollar/
+data/features/
+data/payloads/
