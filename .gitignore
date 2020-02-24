@@ -144,7 +144,7 @@ checklink/cookies.txt
 *.sublime-workspace
 *.sublime-project
 backend/docs
-frontend/public/payloads
+frontend/public/payloads/
 *_dump_*
 *calcium*
 *settings_pers*
