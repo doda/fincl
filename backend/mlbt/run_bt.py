@@ -172,7 +172,7 @@ def binarize(bars, t_events, type_, binarize_params, daily_vol, num_threads):
     is then used to calculate that row's label
     """
     if type_ == "fixed_horizon":
-        return fixed_horizon(t_events, binarize_params)
+        return fixed_horizon(t_events, binarize_params, daily_vol)
     elif type_ == "triple_barrier_method":
         return triple_barrier_method(
             bars, t_events, binarize_params, daily_vol, num_threads

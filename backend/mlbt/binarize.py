@@ -93,9 +93,9 @@ def triple_barrier_method(bars, t_events, params, daily_vol, num_threads=32):
     return events
 
 
-def fixed_horizon(t_events, binarize_window):
+def fixed_horizon(t_events, binarize_window, daily_vol):
     t1 = pd.Series(t_events, index=t_events).shift(-binarize_window)
 
-    events = pd.DataFrame({"trgt": pd.Series(0, index=t1.index), "t1": t1})
+    events = pd.DataFrame({"trgt": pd.Series(daily_vol, index=t1.index), "t1": t1})
 
     return events

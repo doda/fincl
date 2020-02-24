@@ -36,9 +36,12 @@ def run_val(cv, events, clf, X_train, y_train, X_test, y_test):
 
     eval_times = events["t1"].reindex(X_test.index)
 
-    train_test_splits = cv.split(X_test, pred_times=pred_times, eval_times=eval_times)
-    for i, (train_index, test_index) in enumerate(train_test_splits):
-        logging.info(f"Running validation for {type(clf).__name__}: round {i + 1}/{cv.n_splits - 1}")
+    train_test_splits = list(cv.split(X_test, pred_times=pred_times, eval_times=eval_times))
+    first_train, _ = train_test_splits[0]
+    augmented_train_test_splits = [(np.array([]), first_train)] + train_test_splits
+
+    for i, (train_index, test_index) in enumerate(augmented_train_test_splits):
+        logging.info(f"Running validation for {type(clf).__name__}: round {i + 1}/{cv.n_splits}")
         X_train_ = pd.concat([X_train, X_test.iloc[train_index]])
         X_test_ = X_test.iloc[test_index]
         y_train_ = pd.concat([y_train, y_test.iloc[train_index]])

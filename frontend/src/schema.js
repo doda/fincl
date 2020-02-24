@@ -17,12 +17,12 @@ var TF_question = {
       "value" : "fixed_horizon_50",
     },
     {
-      "text" : "200 CUSUM downsampled Dollar Bars",
-      "value" : "fixed_horizon_200",
+      "text" : "100 CUSUM downsampled Dollar Bars",
+      "value" : "fixed_horizon_100",
     },
     {
-      "text" : "400 CUSUM downsampled Dollar Bars",
-      "value" : "fixed_horizon_400",
+      "text" : "200 CUSUM downsampled Dollar Bars",
+      "value" : "fixed_horizon_200",
     },
     ]
   }
