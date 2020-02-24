@@ -90,9 +90,12 @@ def feat_imp_MDA(clf, X, y, cv, t1, pct_embargo, scoring="neg_log_loss"):
     cv_gen = PurgedKFold(n_splits=cv, t1=t1, pct_embargo=pct_embargo)
     scr0, scr1 = pd.Series(), pd.DataFrame(columns=X.columns)
     for i, (train, test) in enumerate(cv_gen.split(X=X)):
-        logging.debug(f"MDA with {cv}-fold CV: fold {i+1}/{cv}")
         X0, y0 = X.iloc[train, :], y.iloc[train]
         X1, y1 = X.iloc[test, :], y.iloc[test]
+        if X0.shape[0] <= 1:
+            logging.debug(f"Fold {i+1} is empty")
+            continue
+        logging.debug(f"MDA with {cv}-fold CV: fold {i+1}/{cv}")
         fit = clf.fit(X=X0, y=y0)
         if scoring == "neg_log_loss":
             prob = fit.predict_proba(X1)

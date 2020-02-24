@@ -91,7 +91,7 @@ def join_importances(deck):
 def pick_good_features(imp_all, columns, method):
     """Pick features that help our classifier's predictive abilities"""
     imp_d = imp_all["mean"].to_dict()
-    cutoff = 0 if method == "MDA" else imp_all["mean"].mean()
+    cutoff = imp_all["mean"].mean()
     cols = [col for col in columns if imp_d[col] > cutoff]
     logging.info(f"Picked {len(cols)}/{len(columns)} important features: {cols}")
 
