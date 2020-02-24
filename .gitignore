@@ -155,3 +155,6 @@ yarn.lock
 data/dollar/
 data/features/
 data/payloads/
+*Copy*ipynb
+backend/*h5
+backend/*csv
