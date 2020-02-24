@@ -19,13 +19,6 @@ from mlfinlab.data_structures import get_dollar_bars, get_tick_bars, get_time_ba
 
 from .utils import NumpyEncoder
 
-# You'll likely have to change these if you're intending to run the code yourself
-# TODO: Factor out into settings.py file
-# DATA_DIR = Path("~/Dropbox/algotrading/data").expanduser()
-# F_PAYLOAD_DIR = Path("~/pr/fincl/frontend/public/payloads").expanduser()
-
-# SYMBOLS_CSV = pd.read_csv(DATA_DIR / "symbols.csv", index_col="iqsymbol")
-
 LENGTH_RANKING = ['@SP#C','@W#C','@BO#C','@QM#C','@QG#C','EZ#C','@KC#C','@C#C','XG#C','@S#C','EX#C','@SB#C','@OJ#C','@NKD#C','@EMD#C','BD#C','LF#C','QNG#C','QCL#C','@HE#C','@CC#C','@CT#C','@LE#C','@ES#C','@TY#C','QSI#C','QPL#C','@FV#C','@O#C','LG#C','@SM#C','@GF#C','QGC#C','@YM#C','@TU#C','QPA#C','@UB#C','@NQ#C','@ED#C','GAS#C','@MME#C','QHG#C','QHO#C','@BP#C','@CD#C','@RP#C','@NE#C','@AD#C']
 
 # Cell

@@ -2,9 +2,10 @@
 
 __all__ = ['roll_measure', 'roll_impact', 'kyle', 'amihud', 'autocorr', 'rolling_stdev', 'rolling_max', 'rolling_mean',
            'ewm_stdev', 'ewm_mean', 'int_ret', 'log_ret', 'ffd', 'volratio', 'binary_encoding', 'quantile_encoding',
-           'sigma_encoding', 'entropy', 'close', 'lag', 'lag_change', 'lag_diff', 'clip', 'sadf', 'month', 'week',
-           'day', 'weekday', 'hour', 'tick_bars', 'make_bars', 'run_feature_engineering', 'get_bars', 'fill_out_symbol',
-           'engineer_feature', 'compute_feature', 'define_feature_configs', 'ENCODERS', 'ENTROPY_FUNS', 'FEATURES']
+           'sigma_encoding', 'entropy', 'close', 'lag', 'lag_change', 'lag_diff', 'clip', 'daily_vol', 'sadf', 'month',
+           'week', 'day', 'weekday', 'hour', 'tick_bars', 'make_bars', 'run_feature_engineering', 'get_bars',
+           'fill_out_symbol', 'engineer_feature', 'compute_feature', 'define_feature_configs', 'ENCODERS',
+           'ENTROPY_FUNS', 'FEATURES']
 
 # Cell
 
@@ -29,6 +30,7 @@ from mlfinlab.microstructural_features.entropy import (
 )
 from mlfinlab.structural_breaks import get_sadf
 
+from .utils import get_daily_vol
 from .frac_diff import frac_diff_ffd
 from .load_data import load_feat, save_feat, get_data, safe_feat_name, process_bars
 
@@ -182,6 +184,10 @@ def clip(df, lower, upper, column="Close"):
     return df[column].clip(lower, upper)
 
 
+def daily_vol(df, span, column="Close"):
+    return get_daily_vol(df[column], span)
+
+
 def sadf(df, model="linear", min_length=20, lags=5, column="Close"):
     return get_sadf(df[column], model=model, add_const=True, min_length=min_length, lags=lags, num_threads=1)
 
@@ -236,6 +242,7 @@ FEATURES = {
     "lag": lag,
     "lag_change": lag_change,
     "clip": clip,
+    "daily_vol": daily_vol,
 
     "sadf": sadf,
 
@@ -260,28 +267,26 @@ def run_feature_engineering(config, deck):
             feat.name = name
             bars_index = deck[symbol]['bars'].index
             if feat.index.shape != bars_index.shape:
-                # We're only interested in values we have prices for
-                # Do this now so concat below is fast (and has the same set of indices across)
                 feat = feat.reindex(index=bars_index, method='ffill')
 
             feats.append(feat)
-        feats2 = pd.concat(feats, axis=1)
-        logging.debug(f"Joined {len(feats)} features into {feats2.shape} shape")
-        # Reindex in case of outside feats
-        deck[symbol]['feats'] = feats2
+        feats_joined = pd.concat(feats, axis=1)
+        logging.debug(f"Joined {len(feats)} features into {feats_joined.shape} shape")
+        deck[symbol]['feats'] = feats_joined
     return deck
+
 
 def get_bars(deck, symbol, config, feat_conf):
     # We can either compute something on already sampled bars,
     # but if we're making bars we'd likely want raw data
     if symbol in deck and not feat_conf['name'] == 'make_bars':
-        # TODO: Remove deep copy
         bars = deck[symbol]['bars'].copy(deep=True)
     else:
         # We're loading a feature external to the price data of our trading universe
-        bars = get_data(config, symbol, "minutely", config["start_date"], config["end_date"])
+        bars = get_data(config, symbol, config["start_date"], config["end_date"])
 
     return bars
+
 
 def fill_out_symbol(feat_conf, for_symbol):
     symbol = feat_conf['symbol'] = feat_conf.get('symbol', for_symbol)
@@ -308,13 +313,13 @@ def engineer_feature(deck, for_symbol, config, feat_conf):
     else:
         df = get_bars(deck, symbol, config, feat_conf)
 
-    feat = compute_feature(deck, for_symbol, config, feat_conf, symbol, df)
+    feat = compute_feature(for_symbol, config, feat_conf, symbol, df)
 
     if config["save_to_disk"]:
         save_feat(config, feat_conf, feat)
     return feat
 
-def compute_feature(deck, for_symbol, config, feat_conf, symbol, df):
+def compute_feature(for_symbol, config, feat_conf, symbol, df):
     logging.debug(f"Computing {feat_conf['name']} for {for_symbol}: {feat_conf}")
     drop = ['name', 'symbol']
     params = {k:v for k, v in feat_conf.items() if not k in drop}

@@ -18,6 +18,7 @@ def avg_active_signal(signal, binarize, binarize_params):
 
 
 def get_pnl_reports(events, symbols, binarize, binarize_params):
+    """Groups our grand frames by symbol and extracts the average active signal that we'll use to trade later"""
     closes = []
     clf_signals = []
     alpha_signals = []
