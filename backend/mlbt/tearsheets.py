@@ -166,7 +166,7 @@ def create_tearsheet(config, events, close, signal, file_name, report_type, benc
     # Due to our train/test split we have few symbols at the beginning of our data sets
 
     # Map long/short to long/flat
-    signal = (signal + 1) / 2
+#     signal = (signal + 1) / 2
     pos_size = 50000
     volatilities = get_volatilities(config, close)
     df_net, _, cost_stats, _, _ = simulate_pnl(config, close, signal, volatilities, pos_size)

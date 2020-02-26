@@ -144,9 +144,6 @@ def get_model(
     hyper_params = hyper_params or {}
     extra_hyper_params = {}
 
-    if clf_type == 'lgbm':
-        hypers_n_iter *= 5 # Can afford a bit more since it's fast
-
     clf = clfs[clf_type](**hyper_params, **extra_hyper_params)
 
     param_grid = param_grids[clf_type]
@@ -155,7 +152,7 @@ def get_model(
 
     if not hyper_params and optimize_hypers:
         # We generally expect to be run with high num_threads which means we don't have to parallelize at the clf level here
-        clf.n_jobs = 1
+#         clf.n_jobs = 1
         logging.info(
             f"hyperparam search n_iter={hypers_n_iter} for {clf_type} on num_threads={num_threads} and n_jobs={clf.n_jobs}"
         )
@@ -172,5 +169,9 @@ def get_model(
 
         clf, hyper_params = search.best_estimator_, search.best_params_
 
-    clf.n_jobs = n_jobs
+    if clf_type == 'random_forest':
+        clf.n_jobs = min(8, n_jobs) # Doesn't like high n_jobs
+    else:
+        clf.n_jobs = n_jobs
+
     return clf, hyper_params

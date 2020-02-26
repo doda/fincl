@@ -208,10 +208,12 @@ def find_params(d, s=None):
         s.add(str(k))
     return s
 
-def imp_path(symbol, c):
+def imp_path(indices, c):
+    start, end = int(indices[0].timestamp()), int(indices[-1].timestamp())
     feat_names = set.union(*[find_params(feat) for feat in c['features']])
     feat_names = ''.join([x[:2] for x in sorted(feat_names - {'name', 'window', 'stdev', 'lag'})])
-    return c["DATA_DIR"] / c["bar_type"] / f"{symbol}_fimp_{c['binarize']}_{c['binarize_params']}_{c['alpha']}_{c['alpha_params']}_{feat_names}_{c['feat_imp_method']}.h5"
+    fn = f"fimp_{start}-{end}_{c['binarize']}_{c['binarize_params']}_{c['alpha']}_{c['alpha_params']}_{feat_names}_{c['feat_imp_method']}.h5"
+    return c["DATA_DIR"] / c["bar_type"] / fn
 
 
 def payload_path(symbols, c):
@@ -257,15 +259,15 @@ def save_feat(config, feat_config, feat):
         return save_hdf(feat, path)
 
 
-def load_imp(symbol, config):
+def load_imp(indices, config):
     if config["load_from_disk"]:
-        path = imp_path(symbol, config)
+        path = imp_path(indices, config)
         return load_hdf(path)
 
 
-def save_imp(symbol, config, imp):
+def save_imp(indices, config, imp):
     if config["save_to_disk"]:
-        path = imp_path(symbol, config)
+        path = imp_path(indices, config)
         return save_hdf(imp, path)
 
 
