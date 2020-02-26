@@ -167,6 +167,7 @@ def create_tearsheet(config, events, close, signal, file_name, report_type, benc
 
     # Map long/short to long/flat
 #     signal = (signal + 1) / 2
+
     pos_size = 50000
     volatilities = get_volatilities(config, close)
     df_net, _, cost_stats, _, _ = simulate_pnl(config, close, signal, volatilities, pos_size)
@@ -192,10 +193,8 @@ def create_tearsheet(config, events, close, signal, file_name, report_type, benc
 
     signal = signal.resample("1B").last()
     # Just-in-case normalize to 1 for reporting
-    signal = signal / signal.max().max()
-    signal.plot()
+#     signal = signal / signal.max().max()
     signal = signal.set_index(signal.index.map(lambda x: x.isoformat()))
-
 
     return (
         returns_net,
