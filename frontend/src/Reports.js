@@ -15,6 +15,37 @@ const CLASSIFIER_OPTIONS = _.fromPairs(_.map(QUESTIONS_MAPPED.classifier.input.o
 
 const isInt = (n) => n % 1 === 0
 
+
+const getUpdateMenus = (data) => {
+  const sectors = _.uniq(_.values(SYMBOLS_JSON.Sector))
+  const buttons = sectors.map(sector => {
+    // debugger
+    return {
+        args: [{'visible': data.map(x => SYMBOLS_JSON.Sector[x.symbol] === sector)}],
+        label: sector,
+        method: 'update',
+    }
+  })
+  const allButton = {
+      args: [{'visible': data.map(x => true)}],
+      label: 'Show all',
+      method: 'update',
+  }
+  return [
+      {
+          buttons: _.concat([allButton], buttons),
+          direction: 'left',
+          pad: {'r': 10, 't': -50},
+          showactive: true,
+          type: 'buttons',
+          x: 10,
+          xanchor: 'left',
+          y: 20,
+          yanchor: 'top',
+      }
+  ]
+}
+
 const getSignalsPlotData = (signals) => {
   if (_.isEmpty(signals)) {
     return {}
@@ -36,9 +67,10 @@ const getSignalsPlotData = (signals) => {
 
     return {
       x: x_rows,
-      y: y_rows[symbol],
+      y: y_rows[symbol].map(x => x === 0 ? null : x),
       type: 'scatter',
       name: SYMBOLS_JSON.Bloomberg[v] || v,
+      symbol: v,
     }
   })
 
@@ -387,14 +419,17 @@ class ClassificationReport extends React.Component {
       )
     }
 
+    const signalsPlotData = getSignalsPlotData(this.props.data.pnl.signal)
+    const updateMenus = getUpdateMenus(signalsPlotData)
+
     return (
         <Row key="pstats">
           <Col md={12}>
             {classificationReportTables}
-            <HidablePanel title="Signals plot">
+            <HidablePanel title="Signals plot" defaultOpen>
               <Plot
-                data={getSignalsPlotData(this.props.data.pnl.signal)}
-                layout={{width: 700, height: 500}}
+                data={signalsPlotData}
+                layout={{width: 700, height: 500, updatemenus: updateMenus}}
               />
             </HidablePanel>
           </Col>
