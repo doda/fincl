@@ -67,7 +67,7 @@ const getSignalsPlotData = (signals) => {
 
     return {
       x: x_rows,
-      y: y_rows[symbol].map(x => x === 0 ? null : x),
+      y: y_rows[symbol],
       type: 'scatter',
       name: SYMBOLS_JSON.Bloomberg[v] || v,
       symbol: v,
