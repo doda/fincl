@@ -15,6 +15,37 @@ const CLASSIFIER_OPTIONS = _.fromPairs(_.map(QUESTIONS_MAPPED.classifier.input.o
 
 const isInt = (n) => n % 1 === 0
 
+
+const getUpdateMenus = (data) => {
+  const sectors = _.uniq(_.values(SYMBOLS_JSON.Sector))
+  const buttons = sectors.map(sector => {
+    // debugger
+    return {
+        args: [{'visible': data.map(x => SYMBOLS_JSON.Sector[x.symbol] === sector)}],
+        label: sector,
+        method: 'update',
+    }
+  })
+  const allButton = {
+      args: [{'visible': data.map(x => true)}],
+      label: 'Show all',
+      method: 'update',
+  }
+  return [
+      {
+          buttons: _.concat([allButton], buttons),
+          direction: 'left',
+          pad: {'r': 10, 't': -50},
+          showactive: true,
+          type: 'buttons',
+          x: 10,
+          xanchor: 'left',
+          y: 20,
+          yanchor: 'top',
+      }
+  ]
+}
+
 const getSignalsPlotData = (signals) => {
   if (_.isEmpty(signals)) {
     return {}
@@ -39,6 +70,7 @@ const getSignalsPlotData = (signals) => {
       y: y_rows[symbol],
       type: 'scatter',
       name: SYMBOLS_JSON.Bloomberg[v] || v,
+      symbol: v,
     }
   })
 
@@ -85,6 +117,7 @@ class ClassificationReportTable extends React.Component {
     if (_.isEmpty(this.props.data)) {
       return null
     }
+
     const rep = this.props.data
     const [k1, k2] = _.has(rep, '0.0') ? ['0.0', '1.0'] : ['-1.0', '1.0']
     const [l1, l2] = [_.split(k1, '.')[0], _.split(k2, '.')[0]]
@@ -374,17 +407,29 @@ class ClassificationReport extends React.Component {
     if (_.isEmpty(this.props.data)) {
       return null
     }
+    const displayClassificationReport = this.props.form_data.classifier !== 'all_models'
+
+    let classificationReportTables = null
+    if (displayClassificationReport) {
+      classificationReportTables = (
+        <HidablePanel title="Classification report" defaultOpen>
+         <ClassificationReportExplanation data={this.props.form_data} />
+         <ClassificationReportData data={this.props.data} />
+        </HidablePanel>
+      )
+    }
+
+    const signalsPlotData = getSignalsPlotData(this.props.data.pnl.signal)
+    const updateMenus = getUpdateMenus(signalsPlotData)
+
     return (
         <Row key="pstats">
           <Col md={12}>
-            <HidablePanel title="Classification report" defaultOpen>
-             <ClassificationReportExplanation data={this.props.form_data} />
-             <ClassificationReportData data={this.props.data} />
-            </HidablePanel>
-            <HidablePanel title="Signals plot">
+            {classificationReportTables}
+            <HidablePanel title="Signals plot" defaultOpen>
               <Plot
-                data={getSignalsPlotData(this.props.data.pnl.signal)}
-                layout={{width: 700, height: 500}}
+                data={signalsPlotData}
+                layout={{width: 700, height: 500, updatemenus: updateMenus}}
               />
             </HidablePanel>
           </Col>

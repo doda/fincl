@@ -36,7 +36,7 @@ def nested_parts(num_atoms, num_threads, upper_triang=False):
     return parts
 
 
-def mp_pandas_obj(func, pd_obj, num_threads=32, mp_batches=1, lin_mols=True, **kargs):
+def mp_pandas_obj(func, pd_obj, num_threads=32, mp_batches=1, lin_mols=True, combine_results=True, **kargs):
     """
     Parallelize jobs, return a dataframe or series
     + func: function to be parallelized. Returns a DataFrame
@@ -61,6 +61,8 @@ def mp_pandas_obj(func, pd_obj, num_threads=32, mp_batches=1, lin_mols=True, **k
         out = process_jobs_(jobs)
     else:
         out = process_jobs(jobs, num_threads=num_threads)
+    if not combine_results:
+        return out
     if isinstance(out[0], pd.DataFrame):
         df0 = pd.DataFrame()
     elif isinstance(out[0], pd.Series):
